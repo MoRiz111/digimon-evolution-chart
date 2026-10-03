@@ -1,0 +1,239 @@
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #10131a;
+
+    color: white;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.header {
+    text-align: center;
+
+    padding: 30px;
+}
+
+
+.header h1 {
+    margin-bottom: 10px;
+}
+
+
+.header p {
+    color: #9da5b4;
+}
+
+
+/* ==========================================
+   CONTROLS
+========================================== */
+
+.controls {
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 30px;
+}
+
+
+#resetButton {
+    border: none;
+
+    padding: 10px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   CHART
+========================================== */
+
+.chart {
+    width: 100%;
+
+    overflow-x: auto;
+
+    padding: 30px;
+}
+
+
+/* ==========================================
+   ROOT DIGIMONS
+========================================== */
+
+.root-container {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    min-width: max-content;
+}
+
+
+/* ==========================================
+   DIGIMON CARD
+========================================== */
+
+.digimon-card {
+    width: 170px;
+
+    min-width: 170px;
+
+    padding: 15px;
+
+    border: 2px solid #394150;
+
+    border-radius: 15px;
+
+    background: #1b212c;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
+}
+
+
+.digimon-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #4da6ff;
+}
+
+
+.digimon-card img {
+    width: 120px;
+
+    height: 120px;
+
+    object-fit: contain;
+}
+
+
+.digimon-card h3 {
+    margin: 8px 0;
+}
+
+
+.stage {
+    display: inline-block;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    background: #303846;
+
+    color: #b8c1d0;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   EVOLUTION BRANCHES
+========================================== */
+
+.evolution-container {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 40px;
+
+    margin-top: 30px;
+
+    min-width: max-content;
+}
+
+
+.evolution-branch {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+
+/* ==========================================
+   ARROW
+========================================== */
+
+.arrow {
+    margin: 8px;
+
+    font-size: 28px;
+
+    color: #737d8e;
+}
+
+
+/* ==========================================
+   REQUIREMENTS
+========================================== */
+
+.requirement {
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    white-space: nowrap;
+}
+
+
+.requirement.natural {
+    background: #243b2b;
+
+    color: #8de0a2;
+}
+
+
+.requirement.stat {
+    background: #403820;
+
+    color: #ffd66b;
+}
+
+
+.requirement.special {
+    background: #29364a;
+
+    color: #7fc4ff;
+}
+
+
+.requirement.curse {
+    background: #42263e;
+
+    color: #ff8bd5;
+}
