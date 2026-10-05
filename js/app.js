@@ -1,61 +1,29 @@
 import {
-    renderInitialDigimons,
-    renderEvolutions
+    renderInitialDigimons
 } from "./graph.js";
 
 
 const chart =
     document.getElementById("chart");
 
+
 const resetButton =
     document.getElementById("resetButton");
 
-
-// --------------------------------------------------
-// Track which Digimons have been expanded
-// --------------------------------------------------
 
 const expandedDigimons =
     new Set();
 
 
-// --------------------------------------------------
-// Start application
-// --------------------------------------------------
+function handleDigimonClick(digimonId) {
 
-renderInitialDigimons(
-    chart,
-    handleDigimonClick
-);
+    if (expandedDigimons.has(digimonId)) {
 
+        expandedDigimons.delete(digimonId);
 
-// --------------------------------------------------
-// Digimon clicked
-// --------------------------------------------------
+    } else {
 
-function handleDigimonClick(
-    digimonId
-) {
-
-    // If already expanded -> collapse
-
-    if (
-        expandedDigimons.has(digimonId)
-    ) {
-
-        expandedDigimons.delete(
-            digimonId
-        );
-
-    }
-
-    // Otherwise -> expand
-
-    else {
-
-        expandedDigimons.add(
-            digimonId
-        );
+        expandedDigimons.add(digimonId);
 
     }
 
@@ -64,36 +32,16 @@ function handleDigimonClick(
 }
 
 
-// --------------------------------------------------
-// Render entire chart
-// --------------------------------------------------
-
 function renderChart() {
-
-    chart.innerHTML = "";
-
-
-    // Render root Digimons
 
     renderInitialDigimons(
         chart,
-        handleDigimonClick
+        handleDigimonClick,
+        expandedDigimons
     );
 
-
-    /*
-     * Later we will replace this with
-     * a proper graph/tree renderer.
-     *
-     * For now this gives us the first
-     * interactive version.
-     */
 }
 
-
-// --------------------------------------------------
-// Reset
-// --------------------------------------------------
 
 resetButton.addEventListener(
     "click",
@@ -105,3 +53,6 @@ resetButton.addEventListener(
 
     }
 );
+
+
+renderChart();

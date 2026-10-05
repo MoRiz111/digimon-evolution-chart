@@ -2,72 +2,47 @@ import { digimons } from "../data/digimons.js";
 import { evolutions } from "../data/evolutions.js";
 
 
-// --------------------------------------------------
-// Find Digimon by ID
-// --------------------------------------------------
-
 function getDigimonById(id) {
 
     return Object.values(digimons)
         .find(digimon => digimon.id === id);
+
 }
 
-
-// --------------------------------------------------
-// Get evolutions from a Digimon
-// --------------------------------------------------
 
 function getEvolutionsFrom(id) {
 
     return evolutions.filter(
         evolution => evolution.from === id
     );
+
 }
 
 
-// --------------------------------------------------
-// Create Digimon Card
-// --------------------------------------------------
+function createDigimonCard(digimon, onClick) {
 
-function createDigimonCard(
-    digimon,
-    onClick
-) {
-
-    const card =
-        document.createElement("div");
+    const card = document.createElement("div");
 
     card.className = "digimon-card";
 
 
-    // Image
-
-    const image =
-        document.createElement("img");
+    const image = document.createElement("img");
 
     image.src = digimon.image;
 
     image.alt = digimon.name;
 
 
-    // Name
+    const name = document.createElement("h3");
 
-    const name =
-        document.createElement("h3");
-
-    name.textContent =
-        digimon.name;
+    name.textContent = digimon.name;
 
 
-    // Stage
-
-    const stage =
-        document.createElement("span");
+    const stage = document.createElement("span");
 
     stage.className = "stage";
 
-    stage.textContent =
-        digimon.stage;
+    stage.textContent = digimon.stage;
 
 
     card.appendChild(image);
@@ -76,8 +51,6 @@ function createDigimonCard(
 
     card.appendChild(stage);
 
-
-    // Click
 
     card.addEventListener(
         "click",
@@ -89,13 +62,167 @@ function createDigimonCard(
 }
 
 
-// --------------------------------------------------
-// Render Root Digimons
-// --------------------------------------------------
+function createDigimonNode(
+    digimonId,
+    onDigimonClick,
+    expandedDigimons,
+    path
+) {
+
+    const digimon =
+        getDigimonById(digimonId);
+
+    if (!digimon) {
+        return null;
+    }
+
+
+    /*
+     * This wrapper represents one Digimon
+     * and everything that evolves from it.
+     */
+    const node =
+        document.createElement("div");
+
+    node.className = "digimon-node";
+
+
+    /*
+     * Create the Digimon card.
+     */
+    const card =
+        createDigimonCard(
+            digimon,
+            onDigimonClick
+        );
+
+    node.appendChild(card);
+
+
+    /*
+     * If this Digimon has not been expanded,
+     * stop here.
+     */
+    if (!expandedDigimons.has(digimonId)) {
+        return node;
+    }
+
+
+    /*
+     * Prevent infinite recursion if the data
+     * eventually contains a cycle.
+     */
+    if (path.has(digimonId)) {
+        return node;
+    }
+
+
+    const currentPath =
+        new Set(path);
+
+    currentPath.add(digimonId);
+
+
+    const evolutionList =
+        getEvolutionsFrom(digimonId);
+
+
+    if (evolutionList.length === 0) {
+        return node;
+    }
+
+
+    /*
+     * Container for all possible
+     * evolution branches.
+     */
+    const evolutionContainer =
+        document.createElement("div");
+
+    evolutionContainer.className =
+        "evolution-container";
+
+
+    evolutionList.forEach(evolution => {
+
+        const target =
+            getDigimonById(evolution.to);
+
+        if (!target) {
+            return;
+        }
+
+
+        /*
+         * Each evolution gets its own branch.
+         */
+        const branch =
+            document.createElement("div");
+
+        branch.className =
+            "evolution-branch";
+
+
+        /*
+         * Requirement label.
+         */
+        const requirement =
+            document.createElement("div");
+
+        requirement.className =
+            `requirement ${evolution.requirement.type}`;
+
+        requirement.textContent =
+            evolution.requirement.label;
+
+
+        /*
+         * Arrow between the requirement
+         * and the next Digimon.
+         */
+        const arrow =
+            document.createElement("div");
+
+        arrow.className = "arrow";
+
+        arrow.textContent = "↓";
+
+
+        /*
+         * Recursively create the next Digimon.
+         */
+        const childNode =
+            createDigimonNode(
+                target.id,
+                onDigimonClick,
+                expandedDigimons,
+                currentPath
+            );
+
+
+        branch.appendChild(requirement);
+
+        branch.appendChild(arrow);
+
+        branch.appendChild(childNode);
+
+
+        evolutionContainer.appendChild(branch);
+
+    });
+
+
+    node.appendChild(evolutionContainer);
+
+
+    return node;
+}
+
 
 export function renderInitialDigimons(
     container,
-    onDigimonClick
+    onDigimonClick,
+    expandedDigimons
 ) {
 
     container.innerHTML = "";
@@ -118,115 +245,18 @@ export function renderInitialDigimons(
 
     rootDigimons.forEach(digimon => {
 
-        const card =
-            createDigimonCard(
-                digimon,
-                onDigimonClick
+        const node =
+            createDigimonNode(
+                digimon.id,
+                onDigimonClick,
+                expandedDigimons,
+                new Set()
             );
 
-        rootContainer.appendChild(card);
+        rootContainer.appendChild(node);
 
     });
 
 
     container.appendChild(rootContainer);
-}
-
-
-// --------------------------------------------------
-// Render Evolutions
-// --------------------------------------------------
-
-export function renderEvolutions(
-    digimonId,
-    container,
-    onDigimonClick
-) {
-
-    const evolutionList =
-        getEvolutionsFrom(digimonId);
-
-
-    if (evolutionList.length === 0) {
-
-        return;
-
-    }
-
-
-    const evolutionContainer =
-        document.createElement("div");
-
-    evolutionContainer.className =
-        "evolution-container";
-
-
-    evolutionList.forEach(evolution => {
-
-        const target =
-            getDigimonById(evolution.to);
-
-
-        if (!target) {
-
-            return;
-
-        }
-
-
-        const branch =
-            document.createElement("div");
-
-        branch.className =
-            "evolution-branch";
-
-
-        // Requirement
-
-        const requirement =
-            document.createElement("div");
-
-        requirement.className =
-            `requirement ${evolution.requirement.type}`;
-
-        requirement.textContent =
-            evolution.requirement.label;
-
-
-        // Arrow
-
-        const arrow =
-            document.createElement("div");
-
-        arrow.className =
-            "arrow";
-
-        arrow.textContent =
-            "↓";
-
-
-        // Target card
-
-        const targetCard =
-            createDigimonCard(
-                target,
-                onDigimonClick
-            );
-
-
-        branch.appendChild(requirement);
-
-        branch.appendChild(arrow);
-
-        branch.appendChild(targetCard);
-
-
-        evolutionContainer.appendChild(branch);
-
-    });
-
-
-    container.appendChild(
-        evolutionContainer
-    );
 }

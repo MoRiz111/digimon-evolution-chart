@@ -5,13 +5,17 @@
 
 body {
     margin: 0;
+    min-height: 100vh;
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
-    background: #10131a;
+    background:  url("../assets/images/Digimon-background-thumbnail.webp") /*#10131a*/;
+    background-size: 100% 100%;/*cover*/;
+    background-position: center;
+    background-repeat: no-repeat;
 
     color: white;
 }
@@ -83,10 +87,9 @@ body {
 
 .root-container {
     display: flex;
-
     justify-content: center;
-
-    gap: 25px;
+    align-items: flex-start;
+    gap: 40px;
 
     min-width: max-content;
 }
@@ -161,8 +164,8 @@ body {
 
 .evolution-container {
     display: flex;
-
     justify-content: center;
+    align-items: flex-start;
 
     gap: 40px;
 
